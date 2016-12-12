@@ -38,9 +38,9 @@
         url = decodeURIComponent(url[1]);
       } else {
         var location = window.location;
-        if(location.hostname == "cloud.mediusflow.com" && location.pathname.substring("/api/") !== -1){
-          url = location.href + "/../swagger";
-          } else{
+        if(location.pathname.substring("/api/documentation") !== -1) {
+            url = "https://cloud.mediusflow.com/" + location.pathname.match(/(\w+)\/api\/documentation/)[1] + "/api/swagger";
+          } else {
             url = "http://petstore.swagger.io/v2/swagger.json";
           }
       }
