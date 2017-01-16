@@ -37,10 +37,10 @@
         url = decodeURIComponent(url[1]);
       } else {
         var location = window.location;
-        if(location.pathname.substring("/api/documentation") !== -1) {
+        if(location.pathname.substring("/api/documentation") === -1) {
             url = "https://cloud.mediusflow.com/" + location.pathname.match(/(\w+)\/api\/documentation/)[1] + "/api/swagger/";
           } else {
-            url = "http://petstore.swagger.io/v2/swagger.json";
+            url = "http://ewfuncapp.azurewebsites.net/MaintenantManager/api/swagger?host=localhost&backendHost=localhost:19310"
           }
       }
 
@@ -55,12 +55,12 @@
       window.swaggerUi = new SwaggerUi({
         url: url,
         dom_id: "swagger-ui-container",
+		oauth2RedirectUrl: "https://cloud.mediusflow.com/documentation/api/documentation/o2c.html",
         supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
         onComplete: function(swaggerApi, swaggerUi){
           if(typeof initOAuth == "function") {
             initOAuth({
-              clientId: "your-client-id",
-              clientSecret: "your-client-secret-if-required",
+              clientId: "swagger-ui",
               realm: "your-realms",
               appName: "your-app-name",
               scopeSeparator: " ",
