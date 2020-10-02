@@ -37,10 +37,24 @@
     <script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
     <script>
     window.onload = function() {
+
+      var defaultUrl = window.location.search.match(/url=([^&]+)/);
+      if (defaultUrl && defaultUrl.length > 1) {
+        defaultUrl = decodeURIComponent(defaultUrl[1]);
+      } else {
+        var location = window.location;
+        if(location.pathname.includes("/api/documentation")) {
+            defaultUrl = "https://cloud.mediusflow.com/" + location.pathname.match(/(\w+)\/api\/documentation/)[1] + "/api/swagger/stable";
+          } else {
+            defaultUrl = "http://petstore.swagger.io/v2/swagger.json";
+          }
+      }
+
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        url: "https://petstore.swagger.io/v2/swagger.json",
+        url: defaultUrl,
         dom_id: '#swagger-ui',
+        oauth2RedirectUrl: "https://cloud.mediusflow.com/documentation/api/documentation/o2c.html",
         deepLinking: true,
         presets: [
           SwaggerUIBundle.presets.apis,
@@ -49,9 +63,20 @@
         plugins: [
           SwaggerUIBundle.plugins.DownloadUrl
         ],
-        layout: "StandaloneLayout"
-      })
+        layout: "StandaloneLayout",
+      });
       // End Swagger UI call region
+
+      ui.initOAuth({
+        clientId: "swagger-ui",
+        clientSecret: "your-client-secret-if-required",
+        realm: "your-realms",
+        appName: "your-app-name",
+        scopeSeparator: " ",
+        scopes: "openid Integration",
+        additionalQueryStringParams: {test: "hello"},
+        usePkceWithAuthorizationCodeGrant: true
+      });
 
       window.ui = ui
     }
